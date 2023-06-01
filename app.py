@@ -21,6 +21,8 @@ def register():
             fcuser.userid = form.data.get('userid')
             fcuser.username = form.data.get('username')
             fcuser.password = form.data.get('password')
+            fcuser.amount = 0  # 초기 금액을 0으로 설정
+            fcuser.coin = 0  # 초기 코인 수를 0으로 설정
 
             db.session.add(fcuser)
             db.session.commit()
