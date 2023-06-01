@@ -7,6 +7,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Coin Market</title>
 
+  <link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap" rel="stylesheet" /> 
+  <link href="../static/css/header.css" rel="stylesheet">
 
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -23,13 +25,16 @@
 </head>
 
 <body>
-  {% if not userid %}
-    <button type="button" class="btn btn-primary" onclick="location.href='/register'">회원가입</button>
-    <button type="button" class="btn btn-primary" onclick="location.href='/login'">로그인</button>
-  {% else %}
-    <button type="button" class="btn btn-primary" onclick="location.href='/logout'">로그아웃</button>
-    {{ userid }} 님 환영합니다.
-  {% endif %}
+  <nav class="nav">
+    <p class="nav_title">Coin Market</p>
+    {% if not userid %}
+    <button type="button" class="btn btn-primary nav_register" onclick="location.href='/register'">회원가입</button>
+    <button type="button" class="btn btn-primary nav_login" onclick="location.href='/login'">로그인</button>
+    {% else %}
+    <button type="button" class="btn btn-primary nav_logout" onclick="location.href='/logout'">로그아웃</button>
+    <p class="nav_item">{{ userid }} 님 환영합니다.</p>
+    {% endif %}
+  </nav>
 </body>
 
 </html>
