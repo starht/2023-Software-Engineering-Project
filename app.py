@@ -195,8 +195,8 @@ if __name__ == "__main__":
 
     db.init_app(app)
     with app.app_context():
-        create_initial_market_data()  # 초기 market 데이터 생성
         db.create_all()  # db 생성
+        create_initial_market_data()  # 초기 market 데이터 생성
         
     app.run(host='127.0.0.1', port=5000, debug=True)
     # 포트번호는 기본 5000, 개발단계에서는 debug는 True
