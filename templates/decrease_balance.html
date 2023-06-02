@@ -27,7 +27,7 @@
 <body>
     <h1>출금</h1>
     {% if userid %}
-    {{ session['username'] }}님의 잔액: {{ session['amount'] }}
+    {{ session['username'] }}님의 잔액: {{ session['amount'] }}원
     <form action="/decrease_balance" method="POST">
         {{ form.csrf_token }}
         {{ form.amount_to_decrease.label }} {{ form.amount_to_decrease(size=5) }}
