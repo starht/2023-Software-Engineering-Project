@@ -1,33 +1,20 @@
-.nav {
-  position: relative;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  width: 100vw;
-  height: 64px;
-  background-color: #084298;
-  transition: width 0.3s ease-in-out;
-  float: right;
-}
-
 .nav_title {
   all: unset;
-  flex-basis: 140px;
+  width: 300px;
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-  color: #fff;
-  font-weight: bold;
-  font-size: 21px;
+  color: #007bff;
+  font-weight: lighter;
+  font-size: 25px;
   letter-spacing: 1.5px;
 }
 
-.nav_item {
+.user_info {
   position: absolute;
-  right: 120px;
+  right: 110px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -36,50 +23,22 @@
   margin: 0 4px;
 }
 
-.nav_register{
+.nav_btn_register{
   position: absolute;
-  top: 11px;
-  right: 120px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100px;
-  height: 40px;
-  color: #fff;
-  font-size: 15px;
-  border-radius: 10px;
-  transition: all 0.2s ease-in-out;
+  right: 110px;
+  width: 90px;
   cursor: pointer;
 }
 
-.nav_login{
+.nav_btn{
   position: absolute;
-  top: 11px;
   right: 15px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100px;
-  height: 40px;
-  color: #fff;
-  font-size: 15px;
-  border-radius: 10px;
-  transition: all 0.2s ease-in-out;
+  width: 90px;
   cursor: pointer;
 }
 
-.nav_logout{
-  position: absolute;
-  top: 11px;
-  right: 15px;
+.btn_container{
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100px;
-  height: 40px;
-  color: #fff;
-  font-size: 15px;
-  border-radius: 10px;
-  transition: all 0.2s ease-in-out;
-  cursor: pointer;
 }

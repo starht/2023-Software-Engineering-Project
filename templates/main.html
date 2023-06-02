@@ -7,8 +7,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Coin Market</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap" rel="stylesheet" /> 
+  <link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap" rel="stylesheet" />
   <link href="../static/css/header.css" rel="stylesheet">
+  <link href="../static/css/footer.css" rel="stylesheet">
 
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -25,41 +26,59 @@
 </head>
 
 <body>
-  <nav class="nav">
-    <p class="nav_title">Coin Market</p>
-    {% if not userid %}
-      <button type="button" class="btn btn-primary nav_register" onclick="location.href='/register'">회원가입</button>
-      <button type="button" class="btn btn-primary nav_login" onclick="location.href='/login'">로그인</button>
-    {% else %}
-      <button type="button" class="btn btn-primary nav_logout" onclick="location.href='/logout'">로그아웃</button>
-      <p class="nav_item">{{ session['username'] }} 님 환영합니다.</p>
-    {% endif %}
-  </nav>
-  <main>
-    <div>
-      <p>{{ market.coin_name }}코인 수량: {{ market.coin_quantity }}</p>
-      <p>코인 가격: {{ market.coin_price }}</p>
-    </div>
-    <div>
-    {% if userid %}
-      <br>
-        <p>{{ session['username'] }}님의 잔액: {{ session['amount'] }}</p>
-        <p>{{ session['username'] }}님이 보유한 Coin: {{ session['coin'] }}</p>
-      <br>
-        <button type="button" class="btn btn-primary" onclick="location.href='/buy_coin'">코인 구매</button>
+  <nav class="navbar navbar-expand-lg bg-light">
+    <div class="container-fluid">
+      <div class="navbar-brand" type="button" onclick="location.href='/'">Coin Market</div>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="btn btn-light" type="button" onclick="location.href='/buy_coin'">코인구매</div>
         <form action="/increase_balance" method="POST">
           <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-          <button type="submit" class="btn btn-primary">입금</button>
+          <button type="submit" class="btn btn-light">입금</button>
         </form>
-        
         <form action="/decrease_balance" method="POST">
           <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-          <button type="submit" class="btn btn-primary">출금</button>
+          <button type="submit" class="btn btn-light">출금</button>
         </form>
-    {% endif %}
+      </div>
+      <div class="btn_container">
+        {% if not userid %}
+        <button type="button" class="btn btn-primary nav_btn_register" onclick="location.href='/register'">회원가입</button>
+        <button type="button" class="btn btn-secondary nav_btn" onclick="location.href='/login'">로그인</button>
+        {% else %}
+        <button type="button" class="btn btn-secondary nav_btn" onclick="location.href='/logout'">로그아웃</button>
+        <p class="user_info">{{ session['username'] }} 님 환영합니다.</p>
+        {% endif %}
+      </div>
     </div>
-    
-  </main>
+  </nav>
+
+  <div class="body_wrapper">
+    <main class="body_content">
+      <div>
+        <p>{{ market.coin_name }}코인 수량: {{ market.coin_quantity }}</p>
+        <p>코인 가격: {{ market.coin_price }}원</p>
+      </div>
+
+      <div>
+        {% if userid %}
+        <br>
+        <p>{{ session['username'] }}님의 잔액: {{ session['amount'] }}원</p>
+        <p>{{ session['username'] }}님이 보유한 Coin: {{ session['coin'] }}</p>
+        <br>
+
+        {% endif %}
+      </div>
+
+    </main>
+
+    <footer>
+      <div class="footer_container">
+        <div class="footer_item">
+          <span class="footer_item_title">© 2023 Coin Market</span>
+        </div>
+      </div>
+    </footer>
+  </div>
 </body>
 
 </html>
