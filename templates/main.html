@@ -36,12 +36,29 @@
     {% endif %}
   </nav>
   <main>
+    <div>
+      <p>{{ market.coin_name }}코인 수량: {{ market.coin_quantity }}</p>
+      <p>코인 가격: {{ market.coin_price }}</p>
+    </div>
+    <div>
     {% if userid %}
       <br>
-        {{ session['username'] }}님의 잔액: {{ session['amount'] }}
+        <p>{{ session['username'] }}님의 잔액: {{ session['amount'] }}</p>
+        <p>{{ session['username'] }}님이 보유한 Coin: {{ session['coin'] }}</p>
       <br>
-        {{ session['username'] }}님이 보유한 Coin: {{ session['coin'] }}
+        <button type="button" class="btn btn-primary" onclick="location.href='/buy_coin'">코인 구매</button>
+        <form action="/increase_balance" method="POST">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button type="submit" class="btn btn-primary">입금</button>
+        </form>
+        
+        <form action="/decrease_balance" method="POST">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button type="submit" class="btn btn-primary">출금</button>
+        </form>
     {% endif %}
+    </div>
+    
   </main>
 </body>
 

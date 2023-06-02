@@ -1,7 +1,8 @@
 from flask_wtf import FlaskForm
 from models import Fcuser
 from wtforms import StringField, PasswordField
-from wtforms.validators import DataRequired, EqualTo
+from wtforms.validators import DataRequired, EqualTo, NumberRange
+from wtforms.fields import IntegerField
 
 class RegisterForm(FlaskForm):
     userid = StringField('userid', validators=[DataRequired()])
@@ -24,3 +25,15 @@ class LoginForm(FlaskForm):
         
     userid = StringField('userid', validators=[DataRequired()])
     password = PasswordField('password', validators=[DataRequired(), UserPassword()]) 
+
+
+class BuyCoinForm(FlaskForm):
+    coin_quantity = IntegerField('coin_quantity', validators=[DataRequired(), NumberRange(min=1)])
+
+
+class IncreaseBalanceForm(FlaskForm):
+    amount_to_increase = IntegerField('입금할 금액', validators=[DataRequired(), NumberRange(min=1)])
+
+
+class DecreaseBalanceForm(FlaskForm):
+    amount_to_decrease = IntegerField('출금할 금액', validators=[DataRequired(), NumberRange(min=1)])
