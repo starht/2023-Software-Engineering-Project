@@ -38,6 +38,16 @@ def login():
     if form.validate_on_submit():
         session['userid'] = form.data.get('userid')
 
+        # 사용자 정보 가져오기
+        fcuser = Fcuser.query.filter_by(userid=session['userid']).first()
+        if fcuser is not None:
+            username = fcuser.username
+            amount = fcuser.amount
+            coin = fcuser.coin
+            session['username'] = username
+            session['amount'] = amount
+            session['coin'] = coin
+
         return redirect('/')  # 로그인에 성공하면 홈화면으로 redirect
 
     return render_template('login.html', form=form)
