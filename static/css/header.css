@@ -18,7 +18,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  color: #fff;
+  color: rgb(61, 61, 61);
+  font-size: 15px;
+  font-weight: bold;
   transition: all 0.1s ease-in-out;
   margin: 0 4px;
 }
