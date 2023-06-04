@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from models import Fcuser
 from wtforms import StringField, PasswordField
 from wtforms.validators import DataRequired, EqualTo, NumberRange
-from wtforms.fields import IntegerField
+from wtforms.fields import StringField, IntegerField, DecimalField, SubmitField
 
 class RegisterForm(FlaskForm):
     userid = StringField('userid', validators=[DataRequired()])
@@ -30,6 +30,11 @@ class LoginForm(FlaskForm):
 class BuyCoinForm(FlaskForm):
     coin_quantity = IntegerField('coin_quantity', validators=[DataRequired(), NumberRange(min=1)])
 
+
+class TradeCoinForm(FlaskForm):
+    coin_quantity = IntegerField('거래 수량', validators=[DataRequired()])
+    submit = SubmitField('거래 생성')
+    
 
 class IncreaseBalanceForm(FlaskForm):
     amount_to_increase = IntegerField('입금할 금액', validators=[DataRequired(), NumberRange(min=1)])

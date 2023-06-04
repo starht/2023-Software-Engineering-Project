@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>출금</title>
+  <title>코인 거래</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap" rel="stylesheet" />
   <link href="../static/css/header.css" rel="stylesheet">
@@ -30,8 +30,8 @@
     <div class="container-fluid">
       <div class="navbar-brand" type="button" onclick="location.href='/'">Coin Market</div>
       <div class="collapse navbar-collapse" id="navbarNav">
-        <div class="btn btn-light" type="button" onclick="location.href='/buy_coin'">코인구매</div>
-        <div class="btn btn-light" type="button" onclick="location.href='/trade_coin'">코인거래</div>
+        <div class="btn btn-light" type="button" onclick="location.href='/buy_coin'">코인 구매</div>
+        <div class="btn btn-light" type="button" onclick="location.href='/trade_coin'">코인 거래</div>
         <form action="/increase_balance" method="POST">
           <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
           <button type="submit" class="btn btn-light">입금</button>
@@ -54,45 +54,51 @@
   </nav>
   <div class="body_wrapper">
     <main class="body_content">
-      <h1>출금</h1>
+      <h1>코인 거래</h1>
       {% if userid %}
-      {{ session['username'] }}님의 잔액: {{ session['amount'] }}원
-      <form action="/decrease_balance" method="POST">
+      <p>{{ session['username'] }}님의 잔액: {{ session['amount'] }}원</p>
+      <p>{{ session['username'] }}님이 보유한 Coin: {{ session['coin'] }}</p>
+      <h3>거래 작성</h3>
+      <form action="/trade_coin/create_trade" method="post">
         {{ form.csrf_token }}
-        {{ form.amount_to_decrease.label }} {{ form.amount_to_decrease(size=5) }}
-        {% if form.amount_to_decrease.errors and form.amount_to_decrease.errors[0] != 'This field is required.' %}
-        {{ form.amount_to_decrease.errors }}
-        {% endif %}
+        <div class="form-group">
+          {{ form.hidden_tag() }}
+          {{ form.coin_quantity.label }}
+          {{ form.coin_quantity() }}
+        </div>
 
-        <button type="submit" class="btn btn-primary" onclick="return confirmWithdrawal()">출금</button>
+        <div class="form-group">
+          <button type="submit" class="btn btn-primary">거래글 작성</button>
+        </div>
       </form>
+
+      <h3>거래 선택</h3>
+      {% for trade in trades %}
+      <div>
+        <p>판매자: {{ trade.seller_id }} </p>
+        <p>거래 수량: {{ trade.coin_quantity }} 현재 코인 가격: {{ current_coin_price }}</p>
+        <p>총 가격: {{ trade.coin_quantity * current_coin_price }}</p>
+        <form method="POST" action="/trade_coin/select_trade">
+          {{ form.csrf_token }}
+          <input type="hidden" name="trade_id" value="{{ trade.id }}">
+          <input type="submit" value="거래 선택">
+        </form>
+      </div>
+      <br>
+      {% endfor %}
+
       {% else %}
       <p>로그인이 필요합니다.</p>
       {% endif %}
     </main>
-
-    <footer>
-      <div class="footer_container">
-        <div class="footer_item">
-          <span class="footer_item_title">© 2023 Coin Market</span>
-        </div>
-      </div>
-    </footer>
   </div>
-  <script>
-    function confirmWithdrawal() {
-      var amountToDecrease = parseInt(document.getElementById('amount_to_decrease').value);
-      var currentAmount = parseInt(`{{ session['amount'] }}`);
-
-      if (amountToDecrease > currentAmount) {
-        alert('잔액이 부족합니다.');
-        return false; // 출금을 중단합니다.
-      }
-
-      return true; // 출금을 진행합니다.
-    }
-  </script>
-
+  <footer>
+    <div class="footer_container">
+      <div class="footer_item">
+        <span class="footer_item_title">© 2023 Coin Market</span>
+      </div>
+    </div>
+  </footer>
 </body>
 
 </html>

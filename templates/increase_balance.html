@@ -31,6 +31,7 @@
       <div class="navbar-brand" type="button" onclick="location.href='/'">Coin Market</div>
       <div class="collapse navbar-collapse" id="navbarNav">
         <div class="btn btn-light" type="button" onclick="location.href='/buy_coin'">코인구매</div>
+        <div class="btn btn-light" type="button" onclick="location.href='/trade_coin'">코인거래</div>
         <form action="/increase_balance" method="POST">
           <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
           <button type="submit" class="btn btn-light">입금</button>

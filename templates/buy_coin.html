@@ -31,6 +31,7 @@
       <div class="navbar-brand" type="button" onclick="location.href='/'">Coin Market</div>
       <div class="collapse navbar-collapse" id="navbarNav">
         <div class="btn btn-light" type="button" onclick="location.href='/buy_coin'">코인구매</div>
+        <div class="btn btn-light" type="button" onclick="location.href='/trade_coin'">코인거래</div>
         <form action="/increase_balance" method="POST">
           <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
           <button type="submit" class="btn btn-light">입금</button>
@@ -55,7 +56,8 @@
     <main class="body_content">
       <h1>코인 구매</h1>
       {% if userid %}
-      {{ session['username'] }}님의 코인 갯수: {{ session['coin'] }}개
+      <p>{{ session['username'] }}님의 잔액: {{ session['amount'] }}원</p>
+      <p>{{ session['username'] }}님이 보유한 Coin: {{ session['coin'] }}</p>
       <form method="POST" action="/buy_coin">
         {{ form.csrf_token }}
         <label for="coin_quantity">코인 수량:</label>
