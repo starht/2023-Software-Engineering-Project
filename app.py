@@ -1,12 +1,13 @@
-import os
-from flask import Flask, request, redirect, render_template, session
+import os, random
+from flask import Flask, request, redirect, render_template, session, flash
 from flask_wtf.csrf import CSRFProtect
-from forms import RegisterForm, LoginForm, BuyCoinForm, IncreaseBalanceForm, DecreaseBalanceForm
-from models import db, Fcuser, Market
+from forms import RegisterForm, LoginForm, BuyCoinForm, TradeCoinForm, IncreaseBalanceForm, DecreaseBalanceForm
+from models import db, Fcuser, Market, Trade
+from random import randint
 
 app = Flask(__name__)
 
-# Market 모델 초기 데이터 생성 함수
+# market 데이터 생성
 def create_initial_market_data():
     # 이미 데이터가 있는지 확인
     market_data = Market.query.all()
@@ -24,6 +25,28 @@ def create_initial_market_data():
                         coin_price=coin['coin_price'])
         db.session.add(market)
     db.session.commit()
+
+
+# Fcuser 모델에 coin_balance, amount_balance 프로퍼티 추가
+class Fcuser(db.Model):
+    # ...
+
+    @property
+    def coin_balance(self):
+        return self.coin
+
+    @property
+    def amount_balance(self):
+        return self.amount
+
+# 거래 완료 시 세션 정보 업데이트
+def update_session_info():
+    if 'userid' in session:
+        userid = session['userid']
+        fcuser = Fcuser.query.filter_by(userid=userid).first()
+        if fcuser:
+            session['coin'] = fcuser.coin_balance
+            session['amount'] = fcuser.amount_balance
 
 
 @app.route('/register', methods=['GET', 'POST'])  # 회원가입 페이지
@@ -61,9 +84,12 @@ def login():
             session['username'] = username
             session['amount'] = amount
             session['coin'] = coin
+        
 
+        # 로그인 성공 시 세션 정보 업데이트
+        update_session_info()
         return redirect('/')  # 로그인에 성공하면 홈화면으로 redirect
-
+        
     return render_template('login.html', form=form)
 
 
@@ -108,6 +134,119 @@ def buy_coin():
         return redirect('/')  # 구매 후 홈페이지로 리다이렉트합니다.
         
     return render_template('buy_coin.html', form=form, userid=userid, fcuser=fcuser, market=market)
+
+
+@app.route('/trade_coin', methods=['GET', 'POST'])
+def trade_coin():
+    form = TradeCoinForm()
+
+    if 'userid' not in session:
+        return redirect('/login')
+
+    userid = session['userid']
+    fcuser = Fcuser.query.filter_by(userid=userid).first()
+
+    if fcuser is None:
+        return "Error: User not found"
+
+    if form.validate_on_submit():
+        coin_quantity = form.coin_quantity.data
+        coin_price = form.coin_price.data
+
+        trade = Trade(seller_id=userid, coin_quantity=coin_quantity, coin_price=coin_price)
+        db.session.add(trade)
+        db.session.commit()
+
+        flash('거래글이 작성되었습니다.', 'success')
+        return redirect('/trade_create')
+
+    current_coin_price = randint(80, 130)  # 랜덤한 코인 가격 생성
+    session['current_coin_price'] = current_coin_price  # 세션에 코인 가격 저장
+
+    trades = Trade.query.filter_by(buyer_id=None, is_completed=False).all()
+    return render_template('trade_coin.html', userid=session['userid'], trades=trades, form=form, current_coin_price=current_coin_price)
+
+
+@app.route('/trade_coin/select_trade', methods=['POST'])
+def select_trade():
+    if 'userid' not in session:
+        return redirect('/login')
+
+    userid = session['userid']
+    fcuser = Fcuser.query.filter_by(userid=userid).first()
+
+    if fcuser is None:
+        return "에러: 사용자를 찾을 수 없습니다."
+
+    trade_id = request.form.get('trade_id')
+    trade = Trade.query.get(trade_id)
+
+    if trade is None:
+        return "에러: 거래를 찾을 수 없습니다."
+
+    if trade.buyer_id is not None:
+        return "에러: 거래는 이미 구매자에게 선택되었습니다."
+
+    trade.buyer_id = userid
+    trade.is_completed = True
+
+    # 구매자와 판매자의 Fcuser 인스턴스를 가져옵니다.
+    buyer = Fcuser.query.filter_by(userid=trade.buyer_id).first()
+    seller = Fcuser.query.filter_by(userid=trade.seller_id).first()
+
+    if buyer is None or seller is None:
+        return "에러: 구매자 또는 판매자를 찾을 수 없습니다."
+
+    # 구매자와 판매자의 코인 수량과 계좌 잔액을 업데이트합니다.
+    buyer.coin += trade.coin_quantity
+    buyer.amount -= (trade.coin_quantity * session['current_coin_price'])  # 세션에서 코인 가격을 가져옴
+
+    seller.coin -= trade.coin_quantity
+    seller.amount += (trade.coin_quantity * session['current_coin_price'])  # 세션에서 코인 가격을 가져옴
+
+    db.session.commit()
+
+    # 세션 정보 업데이트
+    update_session_info()
+
+    flash('거래가 선택되었습니다.', 'success')
+    return redirect('/trade_coin')
+
+
+@app.route('/trade_coin/create_trade', methods=['POST'])
+def create_trade():
+    if 'userid' not in session:
+        flash('로그인이 필요합니다.', 'danger')
+        return redirect('/login')
+
+    seller = Fcuser.query.filter_by(userid=session['userid']).first()
+    if not seller:
+        flash('판매자 정보를 찾을 수 없습니다.', 'danger')
+        return redirect('/trade_coin')
+
+    coin_quantity = int(request.form['coin_quantity'])
+
+    if coin_quantity <= 0:
+        flash('코인의 수량은 1 이상이어야 합니다.', 'danger')
+        return redirect('/trade_coin')
+
+    # 판매자의 코인 수량 확인
+    if seller.coin < coin_quantity:
+        flash('보유한 코인 수량이 부족합니다.', 'danger')
+        return redirect('/trade_coin')
+
+     # 거래 생성
+    trade = Trade()
+    trade.seller_id = seller.userid
+    trade.buyer_id = None
+    trade.coin_quantity = coin_quantity
+    trade.calculate_coin_price()
+
+    db.session.add(trade)
+    db.session.commit()
+
+    flash('거래가 생성되었습니다.', 'success')
+    return redirect('/trade_coin')
 
 
 @app.route('/increase_balance', methods=['POST'])
