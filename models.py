@@ -21,6 +21,7 @@ class Market(db.Model):
     coin_price = db.Column(db.Integer, default=100)  # 코인 가격
 
 class Trade(db.Model):
+    __tablename__ = 'trade'  # 테이블 이름: trade
     id = db.Column(db.Integer, primary_key=True)
     seller_id = db.Column(db.String(100), nullable=False)
     buyer_id = db.Column(db.String(100), nullable=True)

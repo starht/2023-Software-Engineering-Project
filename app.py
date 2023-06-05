@@ -165,7 +165,7 @@ def trade_coin():
 
     trades = Trade.query.filter_by(buyer_id=None, is_completed=False).all()
     return render_template('trade_coin.html', userid=session['userid'], trades=trades, form=form, current_coin_price=current_coin_price)
-
+    
 
 @app.route('/trade_coin/select_trade', methods=['POST'])
 def select_trade():
@@ -203,6 +203,9 @@ def select_trade():
 
     seller.coin -= trade.coin_quantity
     seller.amount += (trade.coin_quantity * session['current_coin_price'])  # 세션에서 코인 가격을 가져옴
+
+    # trade의 coin_price를 session['current_coin_price']으로 업데이트합니다.
+    trade.coin_price = session['current_coin_price']
 
     db.session.commit()
 
@@ -311,15 +314,13 @@ def decrease_balance():
 def hello():
     userid = session.get('userid', None)
     market = Market.query.first()
-    return render_template('main.html', userid=userid, market=market)
+    trades = Trade.query.all()  # Retrieve all Trade objects
+    return render_template('main.html', userid=userid, market=market, trades=trades)
 
 
 if __name__ == "__main__":
     basedir = os.path.abspath(os.path.dirname(__file__))  # db파일을 절대경로로 생성
     dbfile = os.path.join(basedir, 'db.sqlite')  # db파일을 절대경로로 생성
-
-    print("basedir:", basedir)
-    print("dbfile:", dbfile)
 
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + \
         dbfile  # sqlite를 사용함

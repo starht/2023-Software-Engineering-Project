@@ -69,7 +69,24 @@
 
         {% endif %}
       </div>
-      
+      <div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>코인 가격 변동 내역</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for trade in trades %}
+            {% if trade.is_completed == 1 %}
+            <tr>
+              <td>{{ trade.coin_price }}</td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
 
     </main>
 
