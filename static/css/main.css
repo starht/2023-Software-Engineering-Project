@@ -1,0 +1,85 @@
+*{
+  font-family: 'Noto Serif KR', serif;
+}
+
+html,
+body {
+  margin: 0;
+  margin-left: 10px;
+  margin-top: 5px;
+}
+
+.body_warpper {
+  height: auto;
+  min-height: 100%;
+  padding-bottom:130px;
+  padding-top: 5px;
+  padding-left: 20px;
+  
+}
+
+.body_content {
+  min-height: 500px;
+  margin-top: 10px;
+  margin-left:10px;
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+.content{
+  width: 80%;
+}
+
+.sidebar {
+  width: 20%;
+  height: 300px; 
+  position: sticky;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  top: 0; 
+  right: 0;
+  background: #e5e9ecc8;
+}
+
+.btn_group{
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+.btn-spacing {
+  margin-left: 10px; /* Adjust the margin as needed */
+}
+
+.trade{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.font_size{
+  font-size: 20px;
+}
+
+.coin_price_size{
+  font-size: 27px;
+  font-weight: 400;
+  color: #007bff;
+  text-align: center;
+}
+
+.box1{
+  border: none 2px;
+  border-radius: 30px;
+  width: 450px;
+  margin-left: 10px;
+}
+
+.box2{
+  border: solid 2px;
+  border-radius: 30px;
+  width: 450px;
+  margin-left: 10px;
+  padding: 20px 5px;
+}

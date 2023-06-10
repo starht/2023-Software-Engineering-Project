@@ -1,0 +1,51 @@
+.nav_title {
+  all: unset;
+  width: 300px;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  color: #007bff;
+  font-weight: lighter;
+  font-size: 25px;
+  letter-spacing: 1.5px;
+}
+
+.selected{
+  background-color: #e5e9ecc8;
+  font-weight: bolder;
+}
+
+.user_info {
+  position: absolute;
+  right: 110px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: rgb(61, 61, 61);
+  font-size: 15px;
+  font-weight: bold;
+  transition: all 0.1s ease-in-out;
+  margin: 0 4px;
+}
+
+.nav_btn_register{
+  position: absolute;
+  right: 110px;
+  width: 90px;
+  cursor: pointer;
+}
+
+.nav_btn{
+  position: absolute;
+  right: 15px;
+  width: 90px;
+  cursor: pointer;
+}
+
+.btn_container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
