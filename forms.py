@@ -32,7 +32,7 @@ class BuyCoinForm(FlaskForm):
 
 
 class TradeCoinForm(FlaskForm):
-    coin_quantity = IntegerField('거래 수량', validators=[DataRequired()])
+    coin_quantity = IntegerField('코인 수량', validators=[DataRequired()])
     submit = SubmitField('거래 생성')
     
 

@@ -8,8 +8,12 @@
   <title>Coin Market</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200;300;400;500&display=swap" rel="stylesheet">
   <link href="../static/css/header.css" rel="stylesheet">
   <link href="../static/css/footer.css" rel="stylesheet">
+  <link href="../static/css/main.css" rel="stylesheet">
 
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -30,16 +34,8 @@
     <div class="container-fluid">
       <div class="navbar-brand" type="button" onclick="location.href='/'">Coin Market</div>
       <div class="collapse navbar-collapse" id="navbarNav">
-        <div class="btn btn-light" type="button" onclick="location.href='/buy_coin'">코인구매</div>
-        <div class="btn btn-light" type="button" onclick="location.href='/trade_coin'">코인거래</div>
-        <form action="/increase_balance" method="POST">
-          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-          <button type="submit" class="btn btn-light">입금</button>
-        </form>
-        <form action="/decrease_balance" method="POST">
-          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-          <button type="submit" class="btn btn-light">출금</button>
-        </form>
+        <div class="btn btn-light" type="button" onclick="location.href='/buy_coin'">코인 구매</div>
+        <div class="btn btn-light" type="button" onclick="location.href='/trade_coin'">코인 거래</div>
       </div>
       <div class="btn_container">
         {% if not userid %}
@@ -55,48 +51,66 @@
 
   <div class="body_wrapper">
     <main class="body_content">
-      <div>
-        <p>{{ market.coin_name }}코인 수량: {{ market.coin_quantity }}</p>
-        <p>Market 코인 가격: {{ market.coin_price }}원</p>
+      <div class="content">
+        <div class="box1">
+          <p class="font_size">Market 보유 {{ market.coin_name }} 코인 수량: {{ market.coin_quantity }}개</p>
+          <p class="font_size">Market 코인 가격: {{ market.coin_price }}원</p>
+        </div>
+        <br>
+        <div class="box2">
+          <p class="coin_price_size">현재 코인 가격: <span style="font-weight:bolder;">{{session['current_coin_price']}}원</span></p>
+        </div>
+        <br>
+        <br>
+        <div>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>코인 가격 변동 내역</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for trade in trades %}
+              {% if trade.is_completed == 1 %}
+              <tr>
+                <td>{{ trade.coin_price }}</td>
+              </tr>
+              {% endif %}
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
       </div>
-
-      <div>
+      <div class="sidebar">
         {% if userid %}
         <br>
-        <p>{{ session['username'] }}님의 잔액: {{ session['amount'] }}원</p>
-        <p>{{ session['username'] }}님이 보유한 Coin: {{ session['coin'] }}</p>
+        <p>{{ session['username'] }}님의 잔액:</p>
+        <p style="font-weight:bolder;">{{ session['amount'] }}원</p>
+        <p>{{ session['username'] }}님이 보유한 Coin:</p>
+        <p style="font-weight:bolder;">{{ session['coin'] }}개</p>
         <br>
-
+        <div class="btn_group">
+          <form action="/increase_balance" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn btn-light">입금</button>
+          </form>
+          <span class="btn-spacing"></span>
+          <form action="/decrease_balance" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn btn-light">출금</button>
+          </form>
+        </div>
+        {% else %}
+        <p>로그인이 필요한 기능입니다.</p>
         {% endif %}
       </div>
-      <div>
-        현재 코인 가격: {{session['current_coin_price']}}
-      </div>
-      <div>
-        <table class="table">
-          <thead>
-            <tr>
-              <th>코인 가격 변동 내역</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for trade in trades %}
-            {% if trade.is_completed == 1 %}
-            <tr>
-              <td>{{ trade.coin_price }}</td>
-            </tr>
-            {% endif %}
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-
     </main>
 
     <footer>
       <div class="footer_container">
         <div class="footer_item">
           <span class="footer_item_title">© 2023 Coin Market</span>
+          <span class="footer_item">5조 한별, 한정민</span>
         </div>
       </div>
     </footer>

@@ -12,6 +12,11 @@
   letter-spacing: 1.5px;
 }
 
+.selected{
+  background-color: #e5e9ecc8;
+  font-weight: bolder;
+}
+
 .user_info {
   position: absolute;
   right: 110px;

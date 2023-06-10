@@ -8,8 +8,12 @@
   <title>입금</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200;300;400;500&display=swap" rel="stylesheet">
   <link href="../static/css/header.css" rel="stylesheet">
   <link href="../static/css/footer.css" rel="stylesheet">
+  <link href="../static/css/main.css" rel="stylesheet">
 
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -30,16 +34,8 @@
     <div class="container-fluid">
       <div class="navbar-brand" type="button" onclick="location.href='/'">Coin Market</div>
       <div class="collapse navbar-collapse" id="navbarNav">
-        <div class="btn btn-light" type="button" onclick="location.href='/buy_coin'">코인구매</div>
-        <div class="btn btn-light" type="button" onclick="location.href='/trade_coin'">코인거래</div>
-        <form action="/increase_balance" method="POST">
-          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-          <button type="submit" class="btn btn-light">입금</button>
-        </form>
-        <form action="/decrease_balance" method="POST">
-          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-          <button type="submit" class="btn btn-light">출금</button>
-        </form>
+        <div class="btn btn-light" type="button" onclick="location.href='/buy_coin'">코인 구매</div>
+        <div class="btn btn-light" type="button" onclick="location.href='/trade_coin'">코인 거래</div>
       </div>
       <div class="btn_container">
         {% if not userid %}
@@ -54,26 +50,54 @@
   </nav>
   <div class="body_wrapper">
     <main class="body_content">
-      <h1>입금</h1>
-      {% if userid %}
-      {{ session['username'] }}님의 잔액: {{ session['amount'] }}원
-      <form action="/increase_balance" method="POST">
-        {{ form.csrf_token }}
-        {{ form.amount_to_increase.label }} {{ form.amount_to_increase(size=5) }}
-        {% if form.amount_to_increase.errors and form.amount_to_increase.errors[0] != 'This field is required.' %}
-        {{ form.amount_to_increase.errors }}
+      <div class="content">
+        <h3>입금하시겠습니까?</h3>
+        <br>
+        {% if userid %}
+        {{ session['username'] }}님의 잔액: {{ session['amount'] }}원
+        <form action="/increase_balance" method="POST">
+          {{ form.csrf_token }}
+          {{ form.amount_to_increase.label }} {{ form.amount_to_increase(size=5) }}
+          {% if form.amount_to_increase.errors and form.amount_to_increase.errors[0] != 'This field is required.' %}
+          {{ form.amount_to_increase.errors }}
+          {% endif %}
+          원<span class="btn-spacing"></span>
+          <button type="submit" class="btn btn-primary">입금</button>
+        </form>
+        {% else %}
+        <p>로그인이 필요합니다.</p>
         {% endif %}
-        <button type="submit" class="btn btn-primary">입금</button>
-      </form>
-      {% else %}
-      <p>로그인이 필요합니다.</p>
-      {% endif %}
+      </div>
+      <div class="sidebar">
+        {% if userid %}
+        <br>
+        <p>{{ session['username'] }}님의 잔액:</p>
+        <p style="font-weight:bolder;">{{ session['amount'] }}원</p>
+        <p>{{ session['username'] }}님이 보유한 Coin:</p>
+        <p style="font-weight:bolder;">{{ session['coin'] }}개</p>
+        <br>
+        <div class="btn_group">
+          <form action="/increase_balance" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn btn-light">입금</button>
+          </form>
+          <span class="btn-spacing"></span>
+          <form action="/decrease_balance" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn btn-light">출금</button>
+          </form>
+        </div>
+
+        {% endif %}
+        
+      </div>
     </main>
 
     <footer>
       <div class="footer_container">
         <div class="footer_item">
           <span class="footer_item_title">© 2023 Coin Market</span>
+          <span class="footer_item">5조 한별, 한정민</span>
         </div>
       </div>
     </footer>
